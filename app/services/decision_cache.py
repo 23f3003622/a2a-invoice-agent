@@ -4,8 +4,8 @@ from app.extensions import db
 from app.models.decision_cache import DecisionCache
 from sqlalchemy.exc import IntegrityError
 
-
-CACHE_VERSION = "v1"
+CACHE_VERSION = "v3"
+PROMPT_VERSION = "invoice-decision-v1"
 
 
 def canonical_json(data):
@@ -20,6 +20,7 @@ def canonical_json(data):
 def get_package_hash(package, policy_revision):
     content = {
         "cacheVersion": CACHE_VERSION,
+        "promptVersion": PROMPT_VERSION,
         "policyRevision": policy_revision,
         "package": {
             key: value
