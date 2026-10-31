@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from app.extensions import db
 from app.models.task import Task
 from sqlalchemy import update
+from flask import Blueprint, jsonify, request, current_app
 from app.services.continuation import process_continuation
 from app.models.message_record import MessageRecord
 from app.services.idempotency import get_message_hash, get_principal_hash
@@ -393,6 +394,10 @@ def send_message():
         db.session.refresh(task)
 
     except Exception:
+        current_app.logger.exception(
+            "Invoice analysis failed for task %s", task_id
+        )
+
         db.session.rollback()
 
         task = Task.query.filter_by(
