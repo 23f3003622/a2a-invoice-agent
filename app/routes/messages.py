@@ -1,19 +1,19 @@
+import json
+import uuid
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
+from sqlalchemy import update
 from sqlalchemy.exc import IntegrityError
+
 from app.extensions import db
 from app.models.task import Task
-from sqlalchemy import update
-from flask import Blueprint, jsonify, request, current_app
-from app.services.continuation import process_continuation
 from app.models.message_record import MessageRecord
+from app.services.continuation import process_continuation
 from app.services.idempotency import get_message_hash
 from app.services.auth import get_principal
 from app.services.ai_engine import analyze_batch
 from app.services.validator import validate_batch, validate_proposal
 from app.services.decision_cache import get_cached_decision, save_decision
-import json
-import uuid
 
 messages_bp = Blueprint("messages", __name__)
 
@@ -27,6 +27,7 @@ def a2a_response(data, status_code=200):
 
 def serialize_task(task):
     return {
+        "kind": "task",
         "id": task.task_id,
         "contextId": task.context_id,
         "status": {"state": task.state},
