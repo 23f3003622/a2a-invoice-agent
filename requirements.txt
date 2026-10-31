@@ -1,0 +1,9 @@
+
+Flask
+gunicorn
+python-dotenv
+requests
+SQLAlchemy
+Flask-SQLAlchemy
+pydantic
+groq
