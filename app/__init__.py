@@ -5,6 +5,7 @@ from app.routes.messages import messages_bp
 from app.services.auth import validate_request
 from app.routes.agent_card import agent_card_bp
 from app.routes.tasks import tasks_bp
+from groq import Groq
 import os
 
 load_dotenv()
@@ -36,6 +37,16 @@ def create_app():
             "status": "healthy",
             "service": "A2A Invoice Agent"
         }), 200
+
+    @app.route("/a2a/groq-check", methods=["GET"])
+    def groq_check():
+        try:
+            client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+            client.models.list()
+            return jsonify({"status": "Groq authentication successful"}), 200
+        except Exception:
+            app.logger.exception("Groq authentication check failed")
+            return jsonify({"status": "Groq authentication failed"}), 500
 
     with app.app_context():
         from app.models import Task, MessageRecord, DecisionCache
