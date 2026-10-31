@@ -203,13 +203,13 @@ def send_message():
     packages = batch.get("packages")
 
     if isinstance(packages, list):
-        current_app.logger.info(
+        current_app.logger.warning(
             "Invoice batch size: %s packages, %s total characters",
             len(packages),
             sum(len(json.dumps(p, ensure_ascii=False)) for p in packages)
         )
         for package in packages:
-            current_app.logger.info(
+            current_app.logger.warning(
                 "Package %s: %s characters",
                 package.get("packageId", "unknown"),
                 len(json.dumps(package, ensure_ascii=False))
