@@ -18,6 +18,5 @@ def get_message_hash(message):
 
 
 def get_principal_hash(bearer_token):
-    return hashlib.sha256(
-        bearer_token.encode("utf-8")
-    ).hexdigest()
+    token = bearer_token.strip()
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()

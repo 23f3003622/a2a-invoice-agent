@@ -1,16 +1,12 @@
-
+from app.services.auth import get_principal
 from flask import Blueprint, jsonify, request
 from app.models.task import Task
 from app.extensions import db
-import hashlib
+
 import json
 
 tasks_bp = Blueprint("tasks", __name__)
 
-
-def get_principal():
-    token = request.headers.get("Authorization", "")[7:]
-    return hashlib.sha256(token.encode()).hexdigest()
 
 
 def a2a_response(data, status_code=200):

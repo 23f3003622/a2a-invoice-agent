@@ -7,7 +7,8 @@ from sqlalchemy import update
 from flask import Blueprint, jsonify, request, current_app
 from app.services.continuation import process_continuation
 from app.models.message_record import MessageRecord
-from app.services.idempotency import get_message_hash, get_principal_hash
+from app.services.idempotency import get_message_hash
+from app.services.auth import get_principal
 from app.services.ai_engine import analyze_batch
 from app.services.validator import validate_batch, validate_proposal
 from app.services.decision_cache import get_cached_decision, save_decision
@@ -183,8 +184,7 @@ def send_message():
 
     message_id = message.get("messageId") or message.get("id")
 
-    token = request.headers.get("Authorization", "")[7:]
-    principal = get_principal_hash(token)
+    principal = get_principal()
 
     if message.get("taskId"):
         return handle_continuation(message, principal)
